@@ -1,0 +1,44 @@
+# https://dev.azure.com/fourthline/MobileSDK/_git/Fourthline%20Pipelines%20Template?path=/Android/library-ci-TEMPLATE.yml
+
+# It's expected that most of the time there is no need to add an extra trigger and the CI pipeline
+# will be triggered by the PR creation event.
+# Feel free to customise it in case of specific project requirements.
+trigger: none
+
+#
+# SECTION START Template part. Don't change
+#
+resources:
+  repositories:
+    - repository: PipelineTemplates
+      type: git
+      name: 'MobileSDK/Fourthline Pipelines Template'
+      #
+      # SECTION END
+      #
+      # Insert the pipeline version to use. The version links with the tags in the
+      # "Fourthline Pipelines Template" git repo e.g. android/0.1.0
+      ref: 'refs/tags/android/0.6.0'
+#
+# SECTION START Template part. Don't change
+#
+extends:
+  template: Android/library-ci.yml@PipelineTemplates
+  #
+  # SECTION END
+  #
+  #
+  # SECTION START Define project specific parameters for the pipeline customisation
+  #
+  parameters:
+    # Every change should make the Sample app compatible with the latest snapshot version in Azure
+    prebuildActions: |
+      echo "mavenRepoAlias=azure" >> $GRADLE_USER_HOME/gradle.properties
+      echo "fourthlineSdkVersion=+" >> $GRADLE_USER_HOME/gradle.properties
+    # Mandatory parameter to define a build variant to run tests against.
+    # Possible values: 'release' and 'debug'
+    testBuildVariant: release
+  #
+  # SECTION END
+  #
+
